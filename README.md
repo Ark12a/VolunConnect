@@ -43,7 +43,8 @@ git clone https://github.com/Ark12a/VolunConnect.git
 3. Run the project:
 
 * If frontend: Open `index.html`
-* If backend: Run server file (mention here)
+* If backend: Run server file (app.py)
+* If website link: https://flask-service-90783602902.asia-south1.run.app
 
 ---
 
@@ -62,7 +63,6 @@ git clone https://github.com/Ark12a/VolunConnect.git
 ## 💡 Future Improvements
 
 * 📱 Mobile app version
-* 🤖 AI-based volunteer matching
 * 🌐 Multi-language support
 * 🏆 Reward system for volunteer
 
