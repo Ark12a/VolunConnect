@@ -21,7 +21,8 @@ It simplifies the process of discovering, joining, and managing volunteer opport
 * Frontend: HTML, CSS, JavaScript
 * Backend: Python 
 * Database: My SQL
-
+* Cloud/Deployment: Google Cloud Platform (GCP)
+* AI/ML Model: Google Gemini API (For the recommendation engine and smart matching)
 ---
 
 ## 📸 Preview
