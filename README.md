@@ -1,4 +1,4 @@
-# VolunConnect
+<img width="1091" height="105" alt="image" src="https://github.com/user-attachments/assets/369d0dd9-e86d-478e-bb0d-00effc175175" /># VolunConnect
 It's a Hackathon Project by Algo Avengers
 
 # 🌍 VolunConnect – Volunteer Coordination Platform
@@ -21,7 +21,8 @@ It simplifies the process of discovering, joining, and managing volunteer opport
 * Frontend: HTML, CSS, JavaScript
 * Backend: Python 
 * Database: My SQL
-
+* Cloud/Deployment: Google Cloud Platform (GCP)
+* AI/ML Model: Google Gemini API (For the recommendation engine and smart matching)
 ---
 
 ## 📸 Preview
