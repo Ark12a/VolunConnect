@@ -1,4 +1,4 @@
-<img width="1091" height="105" alt="image" src="https://github.com/user-attachments/assets/369d0dd9-e86d-478e-bb0d-00effc175175" /># VolunConnect
+# VolunConnect
 It's a Hackathon Project by Algo Avengers
 
 # 🌍 VolunConnect – Volunteer Coordination Platform
