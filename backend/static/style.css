@@ -79,8 +79,8 @@
     }
     /* 🌟 NAYA: Hero Graphic CSS */
             .hero-graphic {
-                width: 100%;
-                max-width: 450px; /* Image ko limit me rakhne ke liye */
+                width: 400px%;
+                max-width: 100%; /* Image ko limit me rakhne ke liye */
                 height: auto;
                 display: block;
                 margin: 0 auto; /* Center karne ke liye */
