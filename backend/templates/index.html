@@ -108,7 +108,7 @@
         .hero{
            margin: 0;
            background: #F9F9F4;
-           /* background: linear-gradient(to right,  #66a6ff,#fce4ec); */
+           
     font-family: 'Segoe UI', sans-serif;
        }
        .recommended-volunteers{
@@ -188,15 +188,15 @@
         display: none !important;
     }
 
-    /* 2. Navbar mein jo text chipak raha hai usko theek karna */
+    
     .nav-links {
         display: flex;
-        flex-direction: column; /* Links ko ek ke neeche ek kar dega */
+        flex-direction: column; 
         gap: 10px;
         margin-top: 15px;
     }
 
-    /* 3. Mobile par thoda extra space dena taaki form saaf dikhe */
+   
     .hero-section {
         flex-direction: column;
         padding: 20px !important;
@@ -206,7 +206,7 @@
    🍔 HAMBURGER MENU SETTINGS
    ========================================= */
 .hamburger {
-    display: none; /* Desktop par nahi dikhega */
+    display: none; 
     font-size: 28px;
     background: none;
     border: none;
@@ -222,32 +222,30 @@
         display: none !important;
     }
 
-    /* 1. Hamburger button ko mobile par dikhayein */
+   
     .hamburger {
         display: block;
-        margin-left: auto; /* Right side bhejne ke liye */
+        margin-left: auto; 
     }
-
-    /* 2. Nav links ko dropdown bana dein (By default chupa hua) */
     .nav-links {
-        display: none; /* Normal halat mein chupa rahega */
+        display: none; 
         flex-direction: column;
         width: 100%;
-        background: #4A90E2; /* Navbar jaisa color */
+        background: #4A90E2;
         position: absolute;
-        top: 60px; /* Navbar ke theek neeche */
+        top: 60px;
         left: 0;
         padding: 20px 0;
         text-align: center;
         box-shadow: 0 10px 10px rgba(0,0,0,0.1);
-        z-index: 1000; /* Taaki dusre design ke upar rahe */
+        z-index: 1000; 
     }
 
     .nav-links a {
-        margin: 10px 0; /* Links ke beech thoda space */
+        margin: 10px 0; 
     }
 
-    /* 3. Yeh class JS add karega menu dikhane ke liye */
+  
     .nav-links.active {
         display: flex;
     }
@@ -261,7 +259,7 @@
         background-color: var(--secondary-color);
         color: var(--white) !important;
         padding: 10px 24px;
-        border-radius: 25px; /* Pill shape button */
+        border-radius: 25px; 
         box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
         transition: all 0.3s ease;
     }
