@@ -68,7 +68,6 @@ def get_verified_experts(cursor):
     """)
     experts = cursor.fetchall()
     
-    # Fallback: Agar 4 log poore nahi hue, toh random bache hue logo se bhar do
     if not experts or len(experts) < 4:
         kami = 4 - len(experts) if experts else 4
         if kami > 0:
