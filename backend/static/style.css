@@ -67,10 +67,10 @@
     }
     /* 🌟 NAYA: Logo Image CSS */
             .site-logo {
-                height: 40px; /* Isko apne hisaab se bada ya chota kar lena (jaise 50px ya 35px) */
+                height: 40px; 
                 width: auto;
                 display: block;
-                border-radius: 8px; /* Agar logo ke corners gol karne hain */
+                border-radius: 8px; 
             }
     .nav-motto {
         color: var(--text-light);
@@ -80,17 +80,17 @@
     /* 🌟 NAYA: Hero Graphic CSS */
             .hero-graphic {
                 width: 400px%;
-                max-width: 100%; /* Image ko limit me rakhne ke liye */
+                max-width: 100%; 
                 height: auto;
                 display: block;
-                margin: 0 auto; /* Center karne ke liye */
-                border-radius: 1px; /* Ekdum smooth gol corners */
-                /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); 3D Pop effect */
-                transition: transform 0.3s ease; /* Hover effect ke liye */
+                margin: 0 auto; 
+                border-radius: 1px;
+               
+                transition: transform 0.3s ease; 
                 opacity: 100%;
             }
             
-            /* Image par mouse le jane pe halka sa uthega */
+           
             .hero-graphic:hover {
                 transform: translateY(-5px);
             }
@@ -462,9 +462,9 @@
 
     .ai-form-box {
         background-color: var(--white);
-        max-width: 900px; /* Bada Box */
+        max-width: 900px; 
         margin: 0 auto;
-        padding: 50px; /* Bada Padding taaki bhara hua lage */
+        padding: 50px; 
         border-radius: 16px;
         box-shadow: 0 20px 40px rgba(0,0,0,0.08);
         border-top: 5px solid var(--primary-color);
@@ -488,8 +488,8 @@
     /* Form Grid for 2 columns */
     .form-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Do columns */
-        gap: 25px 40px; /* Beech mein spacing */
+        grid-template-columns: 1fr 1fr;
+        gap: 25px 40px;
     }
 
     /* Radio Button Group (Onsite / Remote) */
@@ -559,7 +559,7 @@
         color: #1e293b; /* Dark slate color */
         font-size: 0.95rem;
         letter-spacing: 0.5px;
-        text-transform: uppercase; /* Thoda professional look ke liye */
+        text-transform: uppercase; 
     }
 
     /* Base style for all inputs and dropdowns */
@@ -677,7 +677,7 @@
         padding: 10px;
         border-radius: 50%;
     }
-    /* Container ko set karo */
+    /* Container set */
     .account-dropdown-container {
         position: relative;
         display: inline-block;
@@ -699,7 +699,7 @@
 
     /* Dropdown Box Style */
     .dropdown-menu {
-        display: none; /* Default mein chupa rahega */
+        display: none;
         position: absolute;
         top: 120%;
         right: 0;
