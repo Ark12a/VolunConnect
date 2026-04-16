@@ -165,19 +165,16 @@
         gap: 15px;
         }
           .site-logo {
-                height: 40px; /* Isko apne hisaab se bada ya chota kar lena (jaise 50px ya 35px) */
+                height: 40px;
                 width: auto;
                 display: block;
-                border-radius: 8px; /* Agar logo ke corners gol karne hain */
+                border-radius: 8px; 
             }
         /* =========================================
    📱 MOBILE RESPONSIVE FIXES
    ========================================= */
 @media (max-width: 768px) {
-    
-    /* Aapka purana code yahan hoga... */
-
-    /* 🌟 Ye naya code add karein: Text ko chupane ke liye */
+   
     .hide-text-mobile {
         display: none !important;
     }
@@ -195,32 +192,31 @@
     
     /* --- 1. HEADER FIXES --- */
     .nav-motto {
-        display: none !important; /* Mobile par motto chupa dein taaki bheed kam ho */
-    }
+        display: none !important;    }
     .logo-text {
-        font-size: 18px !important; /* Font thoda chota taaki sab fit aa jaye */
+        font-size: 18px !important; 
     }
 
     /* --- 2. SEARCH RESULT CARD FIXES --- */
-    /* Card ko horizontal se vertical (ek ke neeche ek) banayein */
+   
     .full-row-card {
         flex-direction: column !important;
         text-align: center !important;
         padding: 20px 15px !important;
     }
 
-    /* Avatar ko center mein laayein */
+   
     .row-avatar {
         margin: 0 auto 15px auto !important;
     }
 
-    /* Text section ki margin hatayein */
+    
     .row-info {
         margin-left: 0 !important;
         width: 100%;
     }
 
-    /* Badges (AI Score, Exp, etc.) ko center mein karke line todne dein */
+   
     .skills-badges {
         justify-content: center !important;
         flex-wrap: wrap !important;
@@ -228,13 +224,12 @@
         margin-bottom: 15px !important;
     }
 
-    /* Location marker ko center karein */
+   
     .location-text {
         justify-content: center !important;
     }
 
     /* --- 3. BUTTONS FIXES --- */
-    /* Buttons ko side-by-side aur barabar size ka banayein */
     .row-actions {
         width: 100% !important;
         flex-direction: row !important;
@@ -469,10 +464,9 @@
                 .catch(error => console.error("Live Data Error:", error));
         }
 
-        // Page khulte hi pehli baar data lao
+       
         fetchLiveHeatmap();
 
-        // 🌟 MAGIC: Har 5 second mein map apne aap update hoga (Bina page reload ke!)
         setInterval(fetchLiveHeatmap, 300000);
 
     </script>
