@@ -1,21 +1,22 @@
-import mysql.connector
+import psycopg2
+import psycopg2.extras
 import random
 import itertools
+import os
+from dotenv import load_dotenv
+import os
 
-# 1. Database Connection
-db = mysql.connector.connect(
-    host="localhost", 
-    user="root", 
-    password="admin123", 
-    database="login1"
-)
+load_dotenv() # Ye command .env file ko read karegi aur variables set kar degi
+# 1. Database Connection (Yahan apna cloud DB URL daal dena)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin123@localhost:5432/login1")
+db = psycopg2.connect(DATABASE_URL)
 cursor = db.cursor()
 
-# 2. Table ko naye sire se banana (Purana data hat jayega)
-cursor.execute("DROP TABLE IF EXISTS volunteers")
-cursor.execute("""
+# 2. Table ko naye sire se banana
+cursor.execute("DROP TABLE IF EXISTS volunteers CASCADE")
+cursor.execute(""" 
 CREATE TABLE volunteers (
-    VolunteerId INT PRIMARY KEY,
+    VolunteerId SERIAL PRIMARY KEY,
     fullname VARCHAR(100),
     email VARCHAR(100),
     skills VARCHAR(50),
@@ -27,6 +28,7 @@ CREATE TABLE volunteers (
     gender VARCHAR(50)
 )
 """)
+db.commit()
 
 # 3. Filter Options
 skills = ['IT Support', 'Teaching', 'Healthcare', 'Event Management']
@@ -40,30 +42,27 @@ male_firsts = ['Aarav', 'Vihaan', 'Aditya', 'Arjun', 'Sai', 'Rohan', 'Amit', 'Ra
 female_firsts = ['Diya', 'Isha', 'Priya', 'Neha', 'Pooja', 'Anjali', 'Sneha', 'Kavya', 'Shruti', 'Swati', 'Riya', 'Kiran', 'Megha', 'Nisha', 'Rekha', 'Oishiki', 'Sinjini', 'Atrayee', 'Khusi', 'Prathiba', 'Nitu']
 last_names = ['Sharma', 'Singh', 'Kumar', 'Patel', 'Gupta', 'Das', 'Dutta', 'Saha', 'Yadav', 'Bhandary', 'Jaiswal', 'Mor', 'Pawar', 'Nair', 'Koel', 'Reddy', 'Verma', 'Mishra', 'Pandey', 'Nath']
 
-# 5. Har combination banayenge (Bina gender ke)
+# 5. Har combination banayenge
 base_combinations = list(itertools.product(skills, locations, exps, availabilities, work_types))
-
 data_to_insert = []
-volunteer_id = 10001 # Nayi ID 10001 se shuru hogi
+volunteer_id = 10001 
 
-print("Generating 7,920 Indian Volunteer Profiles... Please wait.")
+print("Generating Indian Volunteer Profiles for PostgreSQL... Please wait.")
 
-# Har ek filter combination ke andar ghus kar 10 log daalenge
 for combo in base_combinations:
     skill, loc, exp, avail, work = combo
     
-    # EXACT 3:2 RATIO: 6 Male generate karein
+    # EXACT 3:2 RATIO: 6 Male
     for _ in range(6):
         fname = random.choice(male_firsts)
         lname = random.choice(last_names)
         fullname = f"{fname} {lname}"
-        # Fake email generator (e.g. rahul.sharma45@gmail.com)
         email = f"{fname.lower()}.{lname.lower()}{random.randint(10,999)}@gmail.com"
         
         data_to_insert.append((volunteer_id, fullname, email, skill, exp, avail, work, "", loc, "male"))
         volunteer_id += 1
         
-    # EXACT 3:2 RATIO: 4 Female generate karein
+    # EXACT 3:2 RATIO: 4 Female
     for _ in range(4):
         fname = random.choice(female_firsts)
         lname = random.choice(last_names)
@@ -73,24 +72,17 @@ for combo in base_combinations:
         data_to_insert.append((volunteer_id, fullname, email, skill, exp, avail, work, "", loc, "female"))
         volunteer_id += 1
 
-# Database mein daalne se pehle sabko mix (shuffle) kar denge
 random.shuffle(data_to_insert)
 
-# 6. Database mein ek sath daalna (Bulk Insert)
+# 6. Bulk Insert using execute_values (Fastest method for PostgreSQL)
 sql = """INSERT INTO volunteers 
          (VolunteerId, fullname, email, skills, exp, availability, work_type, rating, locn, gender) 
-         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+         VALUES %s"""
 
-# 1000-1000 ke packets mein bhejenge taaki MySQL crash na ho
-chunk_size = 1000
-for i in range(0, len(data_to_insert), chunk_size):
-    cursor.executemany(sql, data_to_insert[i:i+chunk_size])
-    
+print(f"Inserting {len(data_to_insert)} records into PostgreSQL...")
+psycopg2.extras.execute_values(cursor, sql, data_to_insert, page_size=1000)
 db.commit()
 
-print(f"✅ BINGO! {len(data_to_insert)} records successfully added.")
-print("📊 Ratio Achieved: EXACTLY 60% Male & 40% Female.")
-print("🔍 Search Guarantee: Any filter combination will now return EXACTLY 10 results!")
-
+print("BINGO! Records successfully added.")
 cursor.close()
 db.close()
