@@ -232,7 +232,10 @@
                     </div>
                     
                     <div class="row-actions">
-                        <a href="/volunteer/{{ vol.VolunteerId }}" class="view-profile-btn">View Profile</a>
+                        <!-- result.html -->
+                        {% for vol in volunteers %}
+                            {% endfor %}<a href="/volunteer/{{ vol.volunteerid }}" class="view-profile-btn">View Profile</a>
+                        
                         <a href="mailto:{{ vol.email }}" class="message-btn">Message</a>
                     </div>
                 </div>
