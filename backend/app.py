@@ -2,25 +2,28 @@ from flask import Flask, request, render_template, redirect, url_for, session, j
 import random
 import re
 import math
-import mysql.connector
+import psycopg2
+import psycopg2.extras
 import os
 from ai_matchmaker import get_best_matches
 import urllib.parse
+from dotenv import load_dotenv
+import os
+
+load_dotenv() # Ye command .env file ko read karegi aur variables set kar degi
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = "super_secret_hackathon_key"
 
 # ==========================================
-# MYSQL CONNECTION
+# POSTGRESQL CONNECTION
 # ==========================================
 def get_db():
-    # Tumhare balance_db.py ke hisaab se local MySQL credentials
-    return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", "admin123"),
-        database=os.getenv("DB_NAME", "login1")
-    )
+    # Cloud (DATABASE_URL) ya Local PostgreSQL ke liye
+    DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin123@localhost:5432/login1")
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.autocommit = True
+    return conn
 
 # ==========================================
 # HELPER FUNCTIONS
@@ -42,22 +45,22 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     return R * c
 
 def get_verified_experts(cursor):
-    """MySQL compatible query: use RAND() instead of RANDOM()"""
+    """PostgreSQL compatible query: use RANDOM() and exp::text"""
     cursor.execute("""
-        (SELECT * FROM volunteers WHERE skills = 'IT Support' AND exp IN ('>10', '10+', '10-15') LIMIT 1)
+        (SELECT * FROM volunteers WHERE skills = 'IT Support' AND exp::text IN ('>10', '10+', '10-15') LIMIT 1)
         UNION ALL
-        (SELECT * FROM volunteers WHERE skills = 'Teaching' AND gender = 'female' AND exp IN ('>10', '10+', '10-15') LIMIT 1)
+        (SELECT * FROM volunteers WHERE skills = 'Teaching' AND gender = 'female' AND exp::text IN ('>10', '10+', '10-15') LIMIT 1)
         UNION ALL
-        (SELECT * FROM volunteers WHERE skills = 'Healthcare' AND gender = 'female' AND exp IN ('>10', '10+', '10-15') LIMIT 1)
+        (SELECT * FROM volunteers WHERE skills = 'Healthcare' AND gender = 'female' AND exp::text IN ('>10', '10+', '10-15') LIMIT 1)
         UNION ALL
-        (SELECT * FROM volunteers WHERE skills = 'Event Management' AND exp IN ('>10', '10+', '10-15') LIMIT 1)
+        (SELECT * FROM volunteers WHERE skills = 'Event Management' AND exp::text IN ('>10', '10+', '10-15') LIMIT 1)
     """)
     experts = cursor.fetchall()
     
     if not experts or len(experts) < 4:
         kami = 4 - len(experts) if experts else 4
         if kami > 0:
-            cursor.execute(f"SELECT * FROM volunteers ORDER BY RAND() LIMIT {kami}")
+            cursor.execute(f"SELECT * FROM volunteers ORDER BY RANDOM() LIMIT {kami}")
             extra_vols = cursor.fetchall()
             experts.extend(extra_vols)
             
@@ -69,7 +72,7 @@ def get_verified_experts(cursor):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     recommended_vols = get_verified_experts(cursor)
     error_msg = None
@@ -109,7 +112,7 @@ def signup():
         password = request.form.get('Password')
 
         db = get_db()
-        cursor = db.cursor(dictionary=True)
+        cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cursor.execute("SELECT * FROM users WHERE username=%s", (email,))
         existing_user = cursor.fetchone()
         
@@ -119,7 +122,6 @@ def signup():
             return "<h3>Email already registered! Please <a href='/'>Login</a>.</h3>"
             
         cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (email, password))
-        db.commit()
         cursor.close()
         db.close()
         
@@ -142,11 +144,10 @@ def logout():
 def filter_page():
     user_email = session.get('user_email', 'Guest')      
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     recommended_vols = get_verified_experts(cursor)
     
-    # Jinja template ke liye initial critical cities
-    cursor.execute("SELECT city_name FROM cities ORDER BY RAND() LIMIT 3")
+    cursor.execute("SELECT city_name FROM cities ORDER BY RANDOM() LIMIT 3")
     cities_data = cursor.fetchall()
     critical_cities = [c['city_name'] for c in cities_data]
     
@@ -160,9 +161,9 @@ def filter_page():
 @app.route('/api/live-heatmap')
 def live_heatmap():
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    cursor.execute("SELECT city_name, lat, lng FROM cities WHERE lat IS NOT NULL AND lng IS NOT NULL ORDER BY RAND() LIMIT 20") 
+    cursor.execute("SELECT city_name, lat, lng FROM cities WHERE lat IS NOT NULL AND lng IS NOT NULL ORDER BY RANDOM() LIMIT 20") 
     cities = cursor.fetchall()
     
     hotspots = [[float(c['lat']), float(c['lng']), round(random.uniform(0.5, 1.0), 2)] for c in cities]
@@ -188,7 +189,7 @@ def ai_search():
         return redirect(url_for('filter_page'))
 
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     words = ngo_query.lower().replace(',', '').replace('.', '').split()
     target_city, target_lat, target_lng = None, None, None
@@ -208,7 +209,11 @@ def ai_search():
         FROM volunteers v
         LEFT JOIN cities c ON LOWER(v.locn) = LOWER(c.city_name)
     """)
-    all_volunteers = cursor.fetchall()
+    all_volunteers = []
+    # DictCursor objects need to be converted to pure dicts for ai_matchmaker
+    for row in cursor.fetchall():
+        all_volunteers.append(dict(row))
+        
     cursor.close()
     db.close()
     
@@ -234,7 +239,6 @@ def ai_search():
     else:
         final_results = sorted(final_results, key=lambda k: -k.get('match_score', 0))
 
-    # Pagination logic fix
     page = request.args.get('page', 1, type=int)
     total_pages = math.ceil(len(final_results) / 5) if final_results else 1
     paginated_data = final_results[(page-1)*5 : page*5]
@@ -248,7 +252,7 @@ def ai_search():
 def search_volunteers():
     user_email = session.get('user_email', 'Guest')      
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
     skills = request.values.get('skills')
     location = request.values.get('location')
@@ -264,12 +268,14 @@ def search_volunteers():
         params.append(location)
 
     cursor.execute(query, tuple(params))
-    all_filtered_data = cursor.fetchall()
     
+    all_filtered_data = []
+    for row in cursor.fetchall():
+        all_filtered_data.append(dict(row))
+        
     cursor.close()
     db.close()
 
-    # Pagination logic fix
     page = request.args.get('page', 1, type=int)
     total_pages = math.ceil(len(all_filtered_data) / 5) if all_filtered_data else 1
     paginated_data = all_filtered_data[(page-1)*5 : page*5]
@@ -279,18 +285,23 @@ def search_volunteers():
 # ==========================================
 # 8. PROFILE DETAIL
 # ==========================================
-@app.route('/volunteer/<int:VolunteerId>')
-def volunteer_detail(VolunteerId):
+@app.route('/volunteer/<int:vid>') # Variable ka naam vid rakh diya
+def volunteer_detail(vid):
     user_email = session.get('user_email', 'Guest')      
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    cursor = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    cursor.execute("SELECT * FROM volunteers WHERE VolunteerId = %s", (VolunteerId,))
+    # Postgresql mein column 'volunteerid' ho gaya hai, query mein wahi likho
+    cursor.execute("SELECT * FROM volunteers WHERE volunteerid = %s", (vid,))
     vol_data = cursor.fetchone()
 
     cursor.close()
     db.close()
     
+    # Error handling agar data na mile
+    if not vol_data:
+        return "Volunteer profile not found!", 404
+
     return render_template('detail.html', vol=vol_data, user_email=user_email)
 
 # ==========================================
@@ -309,7 +320,7 @@ def support_page():
 
         if fullname and email and issue and message:
             db = get_db()
-            cursor = db.cursor(dictionary=True)
+            cursor = db.cursor()
             cursor.execute("""
                 INSERT INTO support_tickets (fullname, email, issue, message) 
                 VALUES (%s, %s, %s, %s)
