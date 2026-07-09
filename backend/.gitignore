@@ -1,0 +1,16 @@
+# Secrets (Most Important!)
+.env
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Other system files
+.DS_Store
