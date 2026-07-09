@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VolunConnect - NGO Command Center</title>
-    <link rel="icon" type="image/png" href="/static/logo.png">
+    
+    <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
@@ -15,38 +16,30 @@
         .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 12px 0; width: 100%; position: relative; z-index: 1000;}
         .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo-section { display: flex; align-items: center; gap: 15px; }
-        .logo-box { background-color: #1a56db; color: white; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 18px; }
-        .nav-motto { color: #666; font-style: italic; font-size: 14px; }
+        .site-logo { height: 40px; width: auto; display: block; border-radius: 8px; }
         .nav-links { display: flex; align-items: center; gap: 25px; }
         
-        /* ==========================================
-           🌟 MY ACCOUNT DROPDOWN CSS
-           ========================================== */
+        /* Account Dropdown CSS */
         .account-dropdown-container { position: relative; display: inline-block; }
-        
         .account-btn { 
             background: white; border: 2px solid #1a56db; color: #1a56db; 
             padding: 8px 20px; border-radius: 25px; font-weight: bold; 
             cursor: pointer; font-size: 15px; transition: 0.3s;
         }
         .account-btn:hover { background: #f0f4ff; }
-
         .dropdown-menu {
-            display: none; /* Hide by default */
-            position: absolute; top: 120%; right: 0; background-color: white;
+            display: none; position: absolute; top: 120%; right: 0; background-color: white;
             min-width: 220px; box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
             border-radius: 12px; overflow: hidden; z-index: 1000; border: 1px solid #eaeaea;
         }
-        
-        .dropdown-menu.show { display: block; /* Shown by JS */ }
-
+        .dropdown-menu.show { display: block; }
         .dropdown-header { padding: 15px; background: #f9fbfd; }
         .user-email { font-weight: bold; color: #1a1a1a; font-size: 14px; word-break: break-all; }
         .dropdown-menu hr { margin: 0; border: none; border-top: 1px solid #eaeaea; }
         .logout-link { display: block; padding: 12px 15px; color: #d32f2f; text-decoration: none; font-weight: bold; }
         .logout-link:hover { background-color: #ffeaea; }
 
-        /* SIDE-BY-SIDE DASHBOARD LAYOUT */
+        /* Dashboard Layout */
         .dashboard-wrapper {
             display: grid;
             grid-template-columns: 420px 1fr;
@@ -57,87 +50,8 @@
             width: 100%;
             box-sizing: border-box;
             align-items: start; 
-            
         }
-        /* =========================================
-   🌟 EXPERTS / RECOMMENDED SECTION 
-   ========================================= */
-.experts-section {
-    /* Screenshot jaisa peach/orange gradient */
-    background: linear-gradient(135deg, #FDF0E3 0%, #FDBDB2 100%);
-    padding: 60px 20px 80px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.experts-title {
-    text-align: center;
-    color: #222;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 50px;
-    letter-spacing: 0.5px;
-}
-
-.experts-grid {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    flex-wrap: wrap;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-
-.expert-card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 35px 20px;
-    text-align: center;
-    width: 230px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.expert-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-}
-
-.expert-avatar {
-    width: 75px;
-    height: 75px;
-    background-color: #f0f4ff; /* Light blue circle */
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-}
-
-.expert-name {
-    font-size: 18px;
-    color: #222;
-    margin: 0 0 8px 0;
-    font-weight: bold;
-}
-
-.expert-role {
-    font-size: 14px;
-    color: #888;
-    margin: 0 0 25px 0;
-}
-
-.expert-badge {
-    background-color: #f0f4ff;
-    color: #2151D8;
-    padding: 8px 15px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
+        
         @media (max-width: 1024px) {
             .dashboard-wrapper { grid-template-columns: 1fr; }
         }
@@ -158,100 +72,21 @@
         /* Right Panel: Map */
         .map-panel { display: flex; flex-direction: column; height: 100%; min-height: 700px; }
         .ai-insight { background: #fff5f5; color: #d32f2f; padding: 12px 20px; border-radius: 8px; border: 1px solid #ffcdd2; font-weight: 500; margin-bottom: 20px; font-size: 14px; }
-        #map { width: 100%; flex: 1; border-radius: 12px; border: 2px solid #eaeaea; z-index: 1; min-height: 550px;}
-        .logo-section {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        }
-          .site-logo {
-                height: 40px;
-                width: auto;
-                display: block;
-                border-radius: 8px; 
-            }
-        /* =========================================
-   📱 MOBILE RESPONSIVE FIXES
-   ========================================= */
-@media (max-width: 768px) {
-   
-    .hide-text-mobile {
-        display: none !important;
-    }
-    
-    /* Optional: Icon ko thoda bada aur center karne ke liye */
-    .profile-btn {
-        padding: 8px 12px;
-        font-size: 20px; 
-    }
-}
-/* =========================================
-   📱 MOBILE RESPONSIVE FIXES (Updated)
-   ========================================= */
-@media (max-width: 768px) {
-    
-    /* --- 1. HEADER FIXES --- */
-    .nav-motto {
-        display: none !important;    }
-    .logo-text {
-        font-size: 18px !important; 
-    }
+        
+        /* 🔥 Map Container Style - EXTREMELY IMPORTANT 🔥 */
+        #map { width: 100%; height: 550px; border-radius: 12px; border: 2px solid #eaeaea; z-index: 1;}
 
-    /* --- 2. SEARCH RESULT CARD FIXES --- */
-   
-    .full-row-card {
-        flex-direction: column !important;
-        text-align: center !important;
-        padding: 20px 15px !important;
-    }
-
-   
-    .row-avatar {
-        margin: 0 auto 15px auto !important;
-    }
-
-    
-    .row-info {
-        margin-left: 0 !important;
-        width: 100%;
-    }
-
-   
-    .skills-badges {
-        justify-content: center !important;
-        flex-wrap: wrap !important;
-        gap: 8px !important;
-        margin-bottom: 15px !important;
-    }
-
-   
-    .location-text {
-        justify-content: center !important;
-    }
-
-    /* --- 3. BUTTONS FIXES --- */
-    .row-actions {
-        width: 100% !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        gap: 10px !important;
-        margin-top: 15px !important;
-        min-width: unset !important;
-    }
-
-    .row-actions a {
-        flex: 1 !important;
-        padding: 12px 5px !important;
-        font-size: 14px !important;
-        text-align: center !important;
-    }
-}
         /* Footer CSS */
         footer { background-color: #0b1120; color: #ffffff; padding: 30px 20px; text-align: center; width: 100%; box-sizing: border-box; margin-top: auto; }
         footer h3 { margin-top: 0; margin-bottom: 15px; font-size: 18px; letter-spacing: 1px; }
         footer ul { list-style: none; padding: 0; margin: 0; display: flex; justify-content: center; gap: 25px; }
         footer ul li a { color: #8a96ab; text-decoration: none; font-size: 14px; transition: 0.3s;}
         footer ul li a:hover { color: #fff;}
+        
+        /* Mobile Responsive Fixes */
+        @media (max-width: 768px) {
+            .hide-text-mobile { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -259,6 +94,7 @@
     <header class="navbar">
         <div class="nav-container">
             <div class="logo-section">
+                <!-- Tumhara Logo -->
                 <img src="/static/logo1.png" alt="VolunConnect Logo" class="site-logo">
                  <span class="nav-links" style="font-size: 25px;"><strong>VolunConnect</strong></span>
             </div>
@@ -279,11 +115,14 @@
                     </div>
                 </div>
             </nav>
-            
         </div>
     </header> 
 
     <main class="dashboard-wrapper">
+        
+        <!-- ==========================================
+             LEFT PANEL: AI DISPATCHER & TAGS
+             ========================================== -->
         <div class="content-card search-panel">
             <div style="text-align: center; margin-bottom: 15px;">
                 <h2 style="color: #333; font-size: 24px; margin-top: 0;">✨ AI Dispatcher</h2>
@@ -356,32 +195,30 @@
             </div>
         </div>
 
+        <!-- ==========================================
+             RIGHT PANEL: HEATMAP
+             ========================================== -->
         <div class="content-card map-panel">
             <h2 style="color: #333; font-size: 24px; margin-top: 0; margin-bottom: 5px;">🌍 Live Urgency Heatmap</h2>
             <p style="color: #666; margin-bottom: 15px; font-size: 15px;">Real-time visualization of high-priority zones based on unstructured field reports.</p>
             
-            <div class="ai-insight">
-                🚨 <strong>AI Alert:</strong> Critical resource misallocation detected in 
-                
-                {% for city in critical_cities %}
-                    <strong>{{ city }}</strong>{% if not loop.last %} and {% endif %}
-                {% endfor %}. 
-                
-                Select location tags on the left to deploy volunteers.
+            <!-- Dynamic AI Alert Box -->
+            <div class="ai-insight" id="ai-alert">
+                🚨 <strong>AI Alert:</strong> Fetching live satellite data...
             </div>
 
+            <!-- Heatmap Container -->
             <div id="map"></div>
         </div>
     </main>
    
-</div>
+    <!-- Footer -->
     <footer>
         <div class="container">
             <h3>VolunConnect</h3> 
             <ul>
-                
-                <li><a href="https://www.termsfeed.com/live/c508360c-e3ed-403e-afcd-624432f0bf7d">Privacy Policy</a></li>
-                <li><a href="https://www.termsfeed.com/live/c031a24b-f3fa-43a3-af06-bc4aace1ef97">Terms & Condition</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms & Condition</a></li>
             </ul>
             <p style="margin-top: 25px; font-size: 13px; color: #8a96ab; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
                 &copy; 2026 VolunConnect. All rights reserved. <br>
@@ -390,16 +227,24 @@
         </div>
     </footer> 
 
+    <!-- ==========================================
+         SCRIPTS: UI INTERACTIONS
+         ========================================== -->
     <script>
+        // Tag Click Function
         function addParam(text) {
             const searchBox = document.getElementById('aiSearchBox');
-            searchBox.value = searchBox.value ? searchBox.value + ", " + text : text;
+            if (searchBox.value.trim() !== "") {
+                searchBox.value += ", " + text;
+            } else {
+                searchBox.value = text;
+            }
             searchBox.focus();
         }
 
-        // 🌟 DROPDOWN JAVASCRIPT
+        // Dropdown Logic
         function toggleDropdown(event) {
-            event.stopPropagation(); // Prevents instant closing
+            event.stopPropagation(); 
             document.getElementById("accountDropdown").classList.toggle("show");
         }
 
@@ -416,58 +261,77 @@
         }
     </script>
 
+    <!-- ==========================================
+         SCRIPTS: LEAFLET MAP & HEATMAP
+         ========================================== -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
     
     <script>
-        const map = L.map('map').setView([20.5937, 78.9629], 5); // India pe focus
+        // 1. Map Initialization
+        const map = L.map('map').setView([20.5937, 78.9629], 5); 
 
+        // 2. Add Base Layer (Dark Theme)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             subdomains: 'abcd',
             maxZoom: 20
         }).addTo(map);
 
-        let heatLayer = null; // Layer save karne ke liye
+        // 3. Keep track of current Heat Layer
+        let heatLayer = null; 
 
-        // 🌟 LIVE FETCH FUNCTION
+        // 4. Live Fetch Function (Calls app.py API)
         function fetchLiveHeatmap() {
             fetch('/api/live-heatmap')
                 .then(response => response.json())
                 .then(data => {
                     
-                    // 1. Text Update (AI Alert Box)
-                    const alertBox = document.querySelector('.ai-insight');
-                    if (data.critical_cities.length > 0) {
+                    // A. Update AI Alert Box dynamically
+                    const alertBox = document.getElementById('ai-alert');
+                    if (data.critical_cities && data.critical_cities.length > 0) {
                         alertBox.innerHTML = `🚨 <strong>LIVE AI Alert:</strong> Critical resource misallocation detected in <strong>${data.critical_cities.join(', ')}</strong>. Deploy volunteers immediately.`;
+                        alertBox.style.color = "#d32f2f";
+                        alertBox.style.backgroundColor = "#fff5f5";
+                        alertBox.style.borderColor = "#ffcdd2";
                     } else {
                         alertBox.innerHTML = `✅ <strong>Status Normal:</strong> No critical emergencies right now. Keep monitoring.`;
+                        alertBox.style.color = "#155724";
+                        alertBox.style.backgroundColor = "#d4edda";
+                        alertBox.style.borderColor = "#c3e6cb";
                     }
 
-                    // 2. Purana Heatmap Hatao
+                    // B. Remove Old Heatmap layer
                     if (heatLayer) {
                         map.removeLayer(heatLayer);
                     }
 
-                    // 3. Naya Heatmap Lagao
+                    // C. Add New Heatmap layer with alternate data
                     if (data.hotspots && data.hotspots.length > 0) {
                         heatLayer = L.heatLayer(data.hotspots, {
-                            radius: 40,
+                            radius: 35,
                             blur: 20,
                             maxZoom: 5,
                             max: 1.0,
-                            minOpacity: 0.15,
-                            gradient: { 0.1: 'darkblue', 0.3: 'blue', 0.5: 'lime', 0.7: 'orange', 0.85: 'red' }
+                            // Colors: Green/Yellow/Red based on intensity
+                            gradient: { 0.4: 'lime', 0.7: 'orange', 1.0: 'red' }
                         }).addTo(map);
                     }
                 })
-                .catch(error => console.error("Live Data Error:", error));
+                .catch(error => {
+                    console.error("Live Data Error:", error);
+                    document.getElementById('ai-alert').innerHTML = `⚠️ <strong>Connection Error:</strong> Could not reach live servers. Check backend connection.`;
+                });
         }
 
-       
+        // 5. Load map immediately on page load
         fetchLiveHeatmap();
 
-        setInterval(fetchLiveHeatmap, 300000);
+        // 6. Fix for gray map area rendering bug
+        setTimeout(() => { map.invalidateSize(); }, 500);
+
+        // 7. Refresh every 1 minute (60000 ms) automatically
+        setInterval(fetchLiveHeatmap, 60000);
 
     </script>
 </body>
