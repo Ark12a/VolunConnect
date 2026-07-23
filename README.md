@@ -20,8 +20,8 @@ It simplifies the process of discovering, joining, and managing volunteer opport
 
 * Frontend: HTML, CSS, JavaScript
 * Backend: Python 
-* Database: My SQL
-* Cloud/Deployment: Google Cloud Platform (GCP)
+* Database: PostgreSQL
+* Cloud/Deployment: Render
 * AI/ML Model: Google Gemini API (For the recommendation engine and smart matching)
 ---
 
@@ -45,7 +45,7 @@ git clone https://github.com/Ark12a/VolunConnect.git
 
 * If frontend: Open `index.html`
 * If backend: Run server file (app.py)
-* If website link: https://flask-service-90783602902.asia-south1.run.app
+* If website link:  https://volunconnect-30xt.onrender.com
 
 ---
 
